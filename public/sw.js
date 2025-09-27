@@ -22,13 +22,32 @@ self.addEventListener("install", (event) => {
 
 // Fetch event - serve from cache when offline
 self.addEventListener("fetch", (event) => {
+  const { request } = event;
+  const url = new URL(request.url);
+
+  // Skip API routes completely - let them pass through to network
+  if (url.pathname.startsWith("/api/")) {
+    return; // Don't intercept API requests
+  }
+
+  // For non-API requests, use cache-first strategy
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      // Return cached version or fetch from network
+    caches.match(request).then((response) => {
+      // Return cached version if available
       if (response) {
         return response;
       }
-      return fetch(event.request);
+
+      // Fetch from network
+      return fetch(request).catch(() => {
+        // If offline and no cache, return offline page for navigation requests
+        if (request.mode === "navigate") {
+          return caches.match("/offline.html");
+        }
+
+        // For other requests, return a basic offline response
+        return new Response("Offline", { status: 503 });
+      });
     })
   );
 });
