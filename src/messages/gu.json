@@ -1,0 +1,81 @@
+{
+  "common": {
+    "loading": "લોડ થઈ રહ્યું છે...",
+    "save": "સેવ કરો",
+    "saving": "સેવ થઈ રહ્યું છે...",
+    "cancel": "રદ કરો",
+    "edit": "સંપાદન કરો",
+    "update": "અપડેટ કરો",
+    "delete": "ડિલીટ કરો",
+    "add": "ઉમેરો",
+    "search": "શોધો",
+    "filter": "ફિલ્ટર",
+    "clear": "સાફ કરો",
+    "close": "બંધ કરો",
+    "submit": "સબમિટ કરો",
+    "back": "પાછળ",
+    "next": "આગળ",
+    "previous": "પાછલું",
+    "logout": "લોગઆઉટ",
+    "profile": "પ્રોફાઇલ",
+    "settings": "સેટિંગ્સ"
+  },
+  "auth": {
+    "login": "લોગિન",
+    "email": "ઇમેઇલ",
+    "password": "પાસવર્ડ",
+    "loginSuccess": "લોગિન સફળ",
+    "loginError": "લોગિન નિષ્ફળ",
+    "logoutSuccess": "સફળતાપૂર્વક લોગઆઉટ"
+  },
+  "dashboard": {
+    "title": "ડેશબોર્ડ",
+    "welcome": "DB વેકરિયામાં આપનું સ્વાગત છે",
+    "subtitle": "તમારી જમીનની મિલકતો અને ક્લાયન્ટ માહિતીનું સંચાલન કરો",
+    "noLandsFound": "કોઈ જમીન મળી નથી",
+    "noLandsDescription": "દર્શાવવા માટે કોઈ જમીન રેકોર્ડ્સ ઉપલબ્ધ નથી.",
+    "noLandsAction": "તમારો પહેલો જમીન રેકોર્ડ બનાવવા માટે 'જમીન ઉમેરો' બટન પર ક્લિક કરો."
+  },
+  "land": {
+    "fullName": "પૂર્ણ નામ",
+    "mobileNo": "મોબાઇલ નંબર",
+    "location": "સ્થાન",
+    "landArea": "જમીનનું ક્ષેત્રફળ",
+    "landAreaUnit": "ક્ષેત્રફળ એકમ",
+    "unit": "એકમ",
+    "type": "જમીનનો પ્રકાર",
+    "totalPrice": "કુલ કિંમત",
+    "pricePerArea": "પ્રતિ ક્ષેત્રફળ કિંમત",
+    "action": "ક્રિયા",
+    "ownerInfo": "માલિકની માહિતી",
+    "landInfo": "જમીનની માહિતી",
+    "addLand": "જમીન ઉમેરો",
+    "editLand": "જમીન સંપાદન કરો",
+    "createLocation": "બનાવો",
+    "createLandType": "બનાવો",
+    "searchPlaceholder": "જમીન, સ્થાન, માલિકો શોધો...",
+    "filterByLocation": "સ્થાન દ્વારા ફિલ્ટર કરો",
+    "filterByType": "પ્રકાર દ્વારા ફિલ્ટર કરો",
+    "allLocations": "બધા સ્થાનો",
+    "allTypes": "બધા પ્રકારો"
+  },
+  "landTypes": {
+    "land": "જમીન",
+    "house": "ઘર",
+    "apartment": "એપાર્ટમેન્ટ",
+    "commercial": "વ્યાપારિક",
+    "industrial": "ઉદ્યોગિક",
+    "agricultural": "કૃષિ"
+  },
+  "areaUnits": {
+    "sqft": "ચોરસ ફૂટ",
+    "acres": "એકર",
+    "bigha": "બીઘા",
+    "hectare": "હેક્ટર"
+  },
+  "language": {
+    "changeLanguage": "ભાષા બદલો",
+    "gujarati": "ગુજરાતી",
+    "english": "English"
+  }
+}

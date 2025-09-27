@@ -1,0 +1,66 @@
+---
+description: Rules for Next.js 15 App Router project with Tailwind, React Hook Form, and PostgreSQL
+globs:
+  - "**/*.{ts,tsx}"
+alwaysApply: true
+---
+
+rules:
+  # --- General React & Next.js ---
+  - "Always use functional components with hooks (never class components)."
+  - "All code must be in TypeScript (.ts or .tsx). No plain JavaScript."
+  - "Follow the DRY principle: no duplicated logic or components. Always reuse existing code or extract into shared utils/components."
+  - "Use server components by default in App Router. Only use client components when interactivity is required."
+  - "Use async/await, never .then()."
+  - "Use React.memo, useMemo, and useCallback for expensive computations or re-renders."
+  - "Use dynamic imports (`next/dynamic`) for large non-critical components to improve performance."
+  - "Keep components small, modular, and focused on a single responsibility."
+
+  # --- Forms & Hook Form ---
+  - "The project already has shared form components compatible with React Hook Form (`register`, `control`, `errors`). Use those only."
+  - "Never create duplicate inputs, selects, checkboxes, radios, or form elements. Always import from `/components/form/`."
+  - "If a new form element is needed, add it once to `/components/form/`, make it Hook Form compatible, and reuse everywhere."
+  - "Validation schemas must be centralized in `/schemas/` using Zod or Yup. No inline schema duplication."
+  - "Validation error messages must use a single error component (e.g., `<FormError>`). No inline error spans."
+  - "Toast messages for forms must always use the central toast utility (`/utils/toast.ts`). Never inline `toast.success` or `toast.error`."
+
+  # --- Styling & Design ---
+  - "Use Tailwind CSS for all styling. No inline styles or raw CSS unless strictly required."
+  - "All colors, fonts, and spacing must come from `tailwind.config.ts` theme. Add missing values there before using."
+  - "Design must always follow a mobile-first approach: start with small screen layouts and scale up with responsive utilities (`sm:`, `md:`, `lg:`, `xl:`)."
+  - "No fixed pixel values for widths/heights unless absolutely necessary. Prefer relative units (%/rem/flex/grid)."
+  - "Components must be responsive by default — layouts should gracefully adapt to all screen sizes."
+
+  # --- Accessibility (a11y) ---
+  - "All interactive elements must have accessible labels (`aria-label`, `aria-labelledby`, or semantic HTML)."
+  - "Inputs must always be wrapped with `<label>` or associated with `htmlFor`."
+  - "Use semantic HTML: <button> instead of <div onClick>, <nav> for navigation, <main>, <header>, <footer>, etc."
+  - "All images must have alt text. Decorative images must use `alt=''`."
+  - "Ensure color contrast meets WCAG guidelines."
+  - "All forms and modals must be fully keyboard-navigable."
+
+  # --- Performance & Lighthouse ---
+  - "Use `<Image>` from Next.js for all images, with proper width/height and lazy loading unless marked as priority."
+  - "Use ISR/SSG whenever possible to cache and revalidate pages."
+  - "Avoid blocking rendering with large libraries. Use dynamic import or lazy loading."
+  - "Eliminate unnecessary re-renders with memoization and proper dependency arrays."
+  - "Tree-shake unused imports and avoid dead code."
+  - "Preload critical fonts and assets using Next.js `<link rel='preload'>` where needed."
+
+  # --- SEO & Metadata ---
+  - "Every page must export `metadata` for title, description, and SEO tags in App Router."
+  - "Headings must follow a clear semantic hierarchy (h1 > h2 > h3)."
+  - "All links must have descriptive text (no 'click here')."
+  - "Use structured data (JSON-LD) where applicable."
+  - "Meta descriptions must be unique per page."
+
+  # --- Project Structure & Clean Code ---
+  - "Organize code feature-wise inside `/app` or `/src`."
+  - "Shared UI components live in `/components/common/`."
+  - "Shared form elements live in `/components/form/`."
+  - "Shared schemas live in `/schemas/`."
+  - "Shared constants live in `/constants/`."
+  - "Shared utilities live in `/utils/`."
+  - "API calls must live in `/services/` or `/api/`. Never inside components."
+  - "Do not hardcode strings (messages, labels, URLs). Always import from constants."
+  - "Error handling must be consistent and user-friendly. Never swallow errors silently."

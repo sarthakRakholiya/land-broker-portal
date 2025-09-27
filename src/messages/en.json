@@ -1,0 +1,81 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "update": "Update",
+    "delete": "Delete",
+    "add": "Add",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
+    "close": "Close",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "logout": "Logout",
+    "profile": "Profile",
+    "settings": "Settings"
+  },
+  "auth": {
+    "login": "Login",
+    "email": "Email",
+    "password": "Password",
+    "loginSuccess": "Login successful",
+    "loginError": "Login failed",
+    "logoutSuccess": "Logged out successfully"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome to DB Vekariya",
+    "subtitle": "Manage your land properties and client information",
+    "noLandsFound": "No lands found",
+    "noLandsDescription": "There are currently no land records to display.",
+    "noLandsAction": "Click the 'Add Land' button to create your first land record."
+  },
+  "land": {
+    "fullName": "Full Name",
+    "mobileNo": "Mobile Number",
+    "location": "Location",
+    "landArea": "Land Area",
+    "landAreaUnit": "Area Unit",
+    "unit": "Unit",
+    "type": "Land Type",
+    "totalPrice": "Total Price",
+    "pricePerArea": "Price per Area",
+    "action": "Action",
+    "ownerInfo": "Owner Information",
+    "landInfo": "Land Information",
+    "addLand": "Add Land",
+    "editLand": "Edit Land",
+    "createLocation": "Create",
+    "createLandType": "Create",
+    "searchPlaceholder": "Search lands, locations, owners...",
+    "filterByLocation": "Filter by Location",
+    "filterByType": "Filter by Type",
+    "allLocations": "All Locations",
+    "allTypes": "All Types"
+  },
+  "landTypes": {
+    "land": "Land",
+    "house": "House",
+    "apartment": "Apartment",
+    "commercial": "Commercial",
+    "industrial": "Industrial",
+    "agricultural": "Agricultural"
+  },
+  "areaUnits": {
+    "sqft": "Square Feet",
+    "acres": "Acres",
+    "bigha": "Bigha",
+    "hectare": "Hectare"
+  },
+  "language": {
+    "changeLanguage": "Change Language",
+    "gujarati": "ગુજરાતી",
+    "english": "English"
+  }
+}
