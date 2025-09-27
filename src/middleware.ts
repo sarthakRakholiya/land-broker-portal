@@ -9,6 +9,6 @@ export default createMiddleware({
 });
 
 export const config = {
-  // Match only internationalized pathnames
-  matcher: ["/", "/(gu|en)/:path*"],
+  // Match only internationalized pathnames, exclude root path
+  matcher: ["/(gu|en)/:path*"],
 };

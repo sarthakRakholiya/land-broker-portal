@@ -18,7 +18,11 @@
     "previous": "Previous",
     "logout": "Logout",
     "profile": "Profile",
-    "settings": "Settings"
+    "settings": "Settings",
+    "pageNotFound": "Page Not Found",
+    "pageNotFoundDescription": "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.",
+    "goToLogin": "Go to Login",
+    "goBack": "Go Back"
   },
   "auth": {
     "login": "Login",

@@ -16,6 +16,7 @@ import { LanguageSwitcher } from "@/components/common/LanguageSwitcher";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { toast } from "@/utils/toast";
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface DashboardHeaderProps {}
 
 export function DashboardHeader({}: DashboardHeaderProps) {

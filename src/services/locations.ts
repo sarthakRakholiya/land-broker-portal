@@ -13,11 +13,17 @@ export interface CreateLocationRequest {
 
 export interface GetLocationsParams {
   search?: string;
+  [key: string]: string | number | undefined;
 }
 
 class LocationsService {
   async getLocations(params: GetLocationsParams = {}): Promise<Location[]> {
-    return apiClient.get<Location[]>("/locations", params);
+    // Filter out undefined values to match Record<string, string | number>
+    const filteredParams = Object.fromEntries(
+      Object.entries(params).filter(([, value]) => value !== undefined)
+    ) as Record<string, string | number>;
+
+    return apiClient.get<Location[]>("/locations", filteredParams);
   }
 
   async createLocation(data: CreateLocationRequest): Promise<Location> {

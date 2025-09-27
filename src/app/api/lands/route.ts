@@ -19,6 +19,7 @@ export async function GET(request: NextRequest) {
     const skip = page * limit;
 
     // Build where clause
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: any = {
       userId: user.userId,
     };
@@ -41,7 +42,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (type) {
-      where.type = type.toUpperCase();
+      where.type = { equals: type.toUpperCase() };
     }
 
     const [lands, total] = await Promise.all([

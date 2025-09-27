@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { authService, User } from "@/services/auth";
 import { LoginFormData } from "@/schemas/auth";
 import { toast } from "@/utils/toast";
@@ -58,7 +58,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       await authService.logout();
       setUser(null);
@@ -66,12 +66,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } catch {
       toast.error("Error", "Logout failed. Please try again.");
     }
-  };
+  }, [t]);
 
   // Register global logout function for API client
   useEffect(() => {
     setGlobalLogout(logout);
-  }, []);
+  }, [logout]);
 
   const value: AuthContextType = {
     user,

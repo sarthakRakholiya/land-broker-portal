@@ -25,7 +25,7 @@ import {
 } from "@mui/icons-material";
 import { LAND_TYPES } from "@/constants/lands";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { locationsService, Location } from "@/services/locations";
+import { locationsService } from "@/services/locations";
 import { useState, useEffect } from "react";
 
 interface LandsFiltersProps {

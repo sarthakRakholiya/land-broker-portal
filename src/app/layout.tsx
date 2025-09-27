@@ -6,6 +6,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Toast } from "@/components/common/Toast";
+import { PWAWrapper } from "@/components/common/PWAWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,6 +25,28 @@ export const metadata: Metadata = {
   keywords: "land broker, property management, real estate, DB Vekariya",
   authors: [{ name: "DB Vekariya" }],
   viewport: "width=device-width, initial-scale=1",
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "32x32", type: "image/x-icon" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: [
+      {
+        url: "/android-chrome-192x192.png",
+        sizes: "192x192",
+        type: "image/png",
+      },
+      {
+        url: "/android-chrome-512x512.png",
+        sizes: "512x512",
+        type: "image/png",
+      },
+    ],
+  },
+  manifest: "/site.webmanifest",
 };
 
 export default function RootLayout({
@@ -42,6 +65,7 @@ export default function RootLayout({
               {children}
               <RouteLoader />
               <Toast />
+              <PWAWrapper />
             </AuthProvider>
           </LanguageProvider>
         </ThemeProvider>

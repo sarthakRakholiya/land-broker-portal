@@ -4,7 +4,7 @@ import { getAuthUser } from "@/lib/middleware";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = getAuthUser(request);
@@ -12,9 +12,10 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const { id } = await params;
     const land = await prisma.land.findFirst({
       where: {
-        id: params.id,
+        id,
         userId: user.userId,
       },
       include: {
@@ -44,7 +45,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = getAuthUser(request);
@@ -52,6 +53,7 @@ export async function PUT(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const { id } = await params;
     const data = await request.json();
     const {
       fullName,
@@ -81,7 +83,7 @@ export async function PUT(
     // Check if land exists and belongs to user
     const existingLand = await prisma.land.findFirst({
       where: {
-        id: params.id,
+        id,
         userId: user.userId,
       },
     });
@@ -93,7 +95,7 @@ export async function PUT(
     const pricePerArea = totalPrice / landArea;
 
     const land = await prisma.land.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         fullName,
         mobileNo,
@@ -127,7 +129,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = getAuthUser(request);
@@ -135,10 +137,12 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const { id } = await params;
+
     // Check if land exists and belongs to user
     const existingLand = await prisma.land.findFirst({
       where: {
-        id: params.id,
+        id,
         userId: user.userId,
       },
     });
@@ -148,7 +152,7 @@ export async function DELETE(
     }
 
     await prisma.land.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ message: "Land deleted successfully" });

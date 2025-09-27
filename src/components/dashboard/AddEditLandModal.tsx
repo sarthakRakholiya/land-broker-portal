@@ -13,7 +13,6 @@ import {
   Typography,
   Autocomplete,
   InputAdornment,
-  Chip,
   CircularProgress,
 } from "@mui/material";
 import {
@@ -37,7 +36,13 @@ const landSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
   mobileNo: z.string().regex(/^[6-9]\d{9}$/, "Invalid mobile number"),
   locationId: z.string().min(1, "Location is required"),
-  landArea: z.coerce.number().min(1, "Land area must be greater than 0"),
+  landArea: z.union([z.string(), z.number()]).transform((val) => {
+    const num = typeof val === "string" ? parseFloat(val) : val;
+    if (isNaN(num) || num <= 0) {
+      throw new Error("Land area must be a valid number greater than 0");
+    }
+    return num;
+  }),
   landAreaUnit: z.enum(["sqft", "acres", "bigha", "hectare"]),
   type: z.enum([
     "land",
@@ -47,10 +52,30 @@ const landSchema = z.object({
     "industrial",
     "agricultural",
   ]),
-  totalPrice: z.coerce.number().min(1, "Total price must be greater than 0"),
+  totalPrice: z.union([z.string(), z.number()]).transform((val) => {
+    const num = typeof val === "string" ? parseFloat(val) : val;
+    if (isNaN(num) || num <= 0) {
+      throw new Error("Total price must be a valid number greater than 0");
+    }
+    return num;
+  }),
 });
 
-type LandFormData = z.infer<typeof landSchema>;
+type LandFormData = {
+  fullName: string;
+  mobileNo: string;
+  locationId: string;
+  landArea: string | number;
+  landAreaUnit: "sqft" | "acres" | "bigha" | "hectare";
+  type:
+    | "land"
+    | "house"
+    | "apartment"
+    | "commercial"
+    | "industrial"
+    | "agricultural";
+  totalPrice: string | number;
+};
 
 interface AddEditLandModalProps {
   open: boolean;
@@ -73,7 +98,7 @@ export function AddEditLandModal({
   const [locations, setLocations] = useState<Location[]>([]);
   const [loadingLocations, setLoadingLocations] = useState(false);
   const [locationInput, setLocationInput] = useState("");
-  const [typeInput, setTypeInput] = useState("");
+  const [, setTypeInput] = useState("");
   const [customLandTypes, setCustomLandTypes] = useState<
     { value: string; label: string }[]
   >([]);
@@ -85,9 +110,9 @@ export function AddEditLandModal({
     control,
     handleSubmit,
     reset,
-    watch,
+    // watch,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<LandFormData>({
     resolver: zodResolver(landSchema),
     defaultValues: {
@@ -120,8 +145,18 @@ export function AddEditLandModal({
         mobileNo: land.mobileNo,
         locationId: land.location.id,
         landArea: land.landArea,
-        landAreaUnit: land.landAreaUnit.toLowerCase(),
-        type: land.type.toLowerCase(),
+        landAreaUnit: land.landAreaUnit.toLowerCase() as
+          | "sqft"
+          | "acres"
+          | "bigha"
+          | "hectare",
+        type: land.type.toLowerCase() as
+          | "land"
+          | "house"
+          | "apartment"
+          | "commercial"
+          | "industrial"
+          | "agricultural",
         totalPrice: land.totalPrice,
       });
       setLocationInput(land.location.name);
@@ -182,7 +217,7 @@ export function AddEditLandModal({
           id: "create-new",
           name: `Create "${locationInput}"`,
           isCreateOption: true,
-        },
+        } as Location & { isCreateOption: true },
       ];
     }
 
@@ -237,6 +272,14 @@ export function AddEditLandModal({
       setIsSaving(true);
       const landData = {
         ...data,
+        landArea:
+          typeof data.landArea === "string"
+            ? parseFloat(data.landArea)
+            : data.landArea,
+        totalPrice:
+          typeof data.totalPrice === "string"
+            ? parseFloat(data.totalPrice)
+            : data.totalPrice,
         location: {
           id: data.locationId,
           name:
@@ -359,7 +402,10 @@ export function AddEditLandModal({
                     value={locations.find((l) => l.id === field.value) || null}
                     onChange={(_, newValue) => {
                       if (newValue && typeof newValue === "object") {
-                        if (newValue.isCreateOption) {
+                        if (
+                          "isCreateOption" in newValue &&
+                          newValue.isCreateOption
+                        ) {
                           handleCreateLocation();
                         } else {
                           field.onChange(newValue.id);
@@ -408,7 +454,8 @@ export function AddEditLandModal({
                               gap: 1,
                             }}
                           >
-                            {option.isCreateOption ? (
+                            {"isCreateOption" in option &&
+                            option.isCreateOption ? (
                               <AddIcon fontSize="small" color="primary" />
                             ) : (
                               <LocationIcon fontSize="small" color="action" />
@@ -428,7 +475,7 @@ export function AddEditLandModal({
                             size="small"
                             fullWidth
                           >
-                            Create "{locationInput}"
+                            Create &quot;{locationInput}&quot;
                           </Button>
                         </Box>
                       ) : (
@@ -454,6 +501,11 @@ export function AddEditLandModal({
                 render={({ field }) => (
                   <TextField
                     {...field}
+                    value={field.value || ""}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      field.onChange(value === "" ? "" : value);
+                    }}
                     label={t("land.landArea")}
                     type="number"
                     error={!!errors.landArea}
@@ -513,14 +565,18 @@ export function AddEditLandModal({
                 <Autocomplete
                   {...field}
                   options={allLandTypes}
-                  getOptionLabel={(option) => option.label}
+                  getOptionLabel={(option) =>
+                    typeof option === "string" ? option : option.label
+                  }
                   value={
                     allLandTypes.find((type) => type.value === field.value) ||
                     allLandTypes[0]
                   }
                   onChange={(_, newValue) => {
-                    field.onChange(newValue?.value || allLandTypes[0].value);
-                    setTypeInput(newValue?.value || "");
+                    const value =
+                      typeof newValue === "string" ? newValue : newValue?.value;
+                    field.onChange(value || allLandTypes[0].value);
+                    setTypeInput(value || "");
                   }}
                   onInputChange={(_, newInputValue) => {
                     handleTypeChange(newInputValue);
@@ -545,6 +601,11 @@ export function AddEditLandModal({
               render={({ field }) => (
                 <TextField
                   {...field}
+                  value={field.value || ""}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    field.onChange(value === "" ? "" : value);
+                  }}
                   label={t("land.totalPrice")}
                   type="number"
                   error={!!errors.totalPrice}
@@ -566,8 +627,19 @@ export function AddEditLandModal({
               label={t("land.pricePerArea")}
               type="number"
               value={
-                totalPrice && landArea && landArea > 0
-                  ? (totalPrice / landArea).toFixed(2)
+                totalPrice &&
+                landArea &&
+                (typeof landArea === "number"
+                  ? landArea
+                  : parseFloat(landArea)) > 0
+                  ? (
+                      (typeof totalPrice === "number"
+                        ? totalPrice
+                        : parseFloat(totalPrice)) /
+                      (typeof landArea === "number"
+                        ? landArea
+                        : parseFloat(landArea))
+                    ).toFixed(2)
                   : "0.00"
               }
               InputProps={{

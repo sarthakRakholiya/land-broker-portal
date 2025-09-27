@@ -18,20 +18,6 @@ async function main() {
     },
   });
 
-  // Create a broker user
-  const brokerPassword = await bcrypt.hash("broker123", 12);
-
-  const brokerUser = await prisma.user.upsert({
-    where: { email: "broker@dbvekariya.com" },
-    update: {},
-    create: {
-      email: "broker@dbvekariya.com",
-      password: brokerPassword,
-      name: "Land Broker",
-      role: "BROKER",
-    },
-  });
-
   // Create default locations
   const locations = ["Gondal", "Rajkot"];
 

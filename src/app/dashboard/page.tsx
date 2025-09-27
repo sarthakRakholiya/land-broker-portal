@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Box, Container, Fade } from "@mui/material";
 import { ProtectedRoute } from "@/components/common/ProtectedRoute";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
@@ -8,7 +8,7 @@ import { LandsTable } from "@/components/dashboard/LandsTable";
 import { LandsFilters } from "@/components/dashboard/LandsFilters";
 import { AddEditLandModal } from "@/components/dashboard/AddEditLandModal";
 import { LandRecord } from "@/constants/lands";
-import { useLanguage } from "@/contexts/LanguageContext";
+// import { useLanguage } from "@/contexts/LanguageContext";
 import { landsService } from "@/services/lands";
 import { toast } from "@/utils/toast";
 
@@ -92,10 +92,10 @@ function DashboardContent() {
   const [editingLand, setEditingLand] = useState<LandRecord | null>(null);
   const [loading, setLoading] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
-  const { t } = useLanguage();
+  // Language context available if needed
 
   // Fetch lands from API
-  const fetchLands = async () => {
+  const fetchLands = useCallback(async () => {
     try {
       setLoading(true);
       const response = await landsService.getLands({
@@ -118,12 +118,12 @@ function DashboardContent() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, rowsPerPage, searchTerm, locationFilter, typeFilter]);
 
   // Fetch lands when filters change
   useEffect(() => {
     fetchLands();
-  }, [page, rowsPerPage, searchTerm, locationFilter, typeFilter]);
+  }, [fetchLands]);
 
   // Filter and search logic (now handled by API)
   const filteredLands = lands;
@@ -163,7 +163,8 @@ function DashboardContent() {
       };
 
       // Remove the location object from the data sent to API
-      const { location, ...apiDataWithoutLocation } = apiData;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { location: _location, ...apiDataWithoutLocation } = apiData;
 
       if (editingLand) {
         // Update existing land

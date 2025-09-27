@@ -11,8 +11,10 @@ export function getAuthUser(request: NextRequest) {
   return verifyToken(token);
 }
 
-export function requireAuth(handler: Function) {
-  return async (request: NextRequest, ...args: any[]) => {
+export function requireAuth(
+  handler: (request: NextRequest, ...args: unknown[]) => Promise<Response>
+) {
+  return async (request: NextRequest, ...args: unknown[]) => {
     const user = getAuthUser(request);
 
     if (!user) {
@@ -23,9 +25,9 @@ export function requireAuth(handler: Function) {
     }
 
     // Add user to request object
-    (request as any).user = user;
+    (request as unknown as { user: { userId: string; email: string } }).user =
+      user;
 
     return handler(request, ...args);
   };
 }
-
