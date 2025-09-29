@@ -6,7 +6,6 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Toast } from "@/components/common/Toast";
-import { PWAWrapper } from "@/components/common/PWAWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -46,7 +45,6 @@ export const metadata: Metadata = {
       },
     ],
   },
-  manifest: "/site.webmanifest",
 };
 
 export default function RootLayout({
@@ -65,7 +63,6 @@ export default function RootLayout({
               {children}
               <RouteLoader />
               <Toast />
-              <PWAWrapper />
             </AuthProvider>
           </LanguageProvider>
         </ThemeProvider>
