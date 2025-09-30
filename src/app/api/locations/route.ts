@@ -4,8 +4,8 @@ import { prisma } from "@/lib/prisma";
 // GET /api/locations - Get all locations
 export async function GET(request: NextRequest) {
   try {
-    console.log("Prisma client:", prisma);
-    console.log("Location model:", prisma?.location);
+    // Ensure Prisma is connected
+    await prisma.$connect();
 
     const { searchParams } = new URL(request.url);
     const search = searchParams.get("search");
@@ -28,15 +28,44 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(locations);
   } catch (error) {
     console.error("Get locations error:", error);
+
+    // More detailed error logging for production debugging
+    if (error instanceof Error) {
+      console.error("Error stack:", error.stack);
+      console.error("Error name:", error.name);
+    }
+
+    // Check if it's a database connection error
     const errorMessage =
       error instanceof Error ? error.message : "Failed to fetch locations";
+
+    // Return different error messages based on error type
+    if (
+      errorMessage.includes("connect") ||
+      errorMessage.includes("ENOTFOUND") ||
+      errorMessage.includes("timeout")
+    ) {
+      return NextResponse.json(
+        { error: "Database connection error. Please try again later." },
+        { status: 503 }
+      );
+    }
+
     return NextResponse.json({ error: errorMessage }, { status: 500 });
+  } finally {
+    // Ensure connection is cleaned up
+    await prisma.$disconnect().catch(() => {
+      // Ignore disconnect errors
+    });
   }
 }
 
 // POST /api/locations - Create a new location
 export async function POST(request: NextRequest) {
   try {
+    // Ensure Prisma is connected
+    await prisma.$connect();
+
     const { name } = await request.json();
 
     if (!name || name.trim() === "") {
@@ -64,8 +93,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check if it's a database connection error
     const errorMessage =
       error instanceof Error ? error.message : "Failed to create location";
+
+    if (
+      errorMessage.includes("connect") ||
+      errorMessage.includes("ENOTFOUND") ||
+      errorMessage.includes("timeout")
+    ) {
+      return NextResponse.json(
+        { error: "Database connection error. Please try again later." },
+        { status: 503 }
+      );
+    }
+
     return NextResponse.json({ error: errorMessage }, { status: 500 });
+  } finally {
+    // Ensure connection is cleaned up
+    await prisma.$disconnect().catch(() => {
+      // Ignore disconnect errors
+    });
   }
 }

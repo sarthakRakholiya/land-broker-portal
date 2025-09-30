@@ -6,8 +6,17 @@ export async function GET(request: NextRequest) {
   try {
     const user = getAuthUser(request);
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      console.log("Unauthorized access attempt to lands API");
+      return NextResponse.json(
+        {
+          error: "Unauthorized",
+          message: "Authentication required. Please login again.",
+        },
+        { status: 401 }
+      );
     }
+
+    console.log("Authenticated user:", user.userId, user.email);
 
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get("page") || "0");
@@ -86,7 +95,14 @@ export async function POST(request: NextRequest) {
   try {
     const user = getAuthUser(request);
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      console.log("Unauthorized access attempt to create land");
+      return NextResponse.json(
+        {
+          error: "Unauthorized",
+          message: "Authentication required. Please login again.",
+        },
+        { status: 401 }
+      );
     }
 
     const data = await request.json();

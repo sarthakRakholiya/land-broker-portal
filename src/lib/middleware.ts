@@ -2,13 +2,38 @@ import { NextRequest } from "next/server";
 import { verifyToken } from "./auth";
 
 export function getAuthUser(request: NextRequest) {
-  const token = request.headers.get("authorization")?.replace("Bearer ", "");
+  try {
+    const authHeader = request.headers.get("authorization");
 
-  if (!token) {
+    if (!authHeader) {
+      console.log("No authorization header found");
+      return null;
+    }
+
+    if (!authHeader.startsWith("Bearer ")) {
+      console.log("Invalid authorization header format");
+      return null;
+    }
+
+    const token = authHeader.replace("Bearer ", "");
+
+    if (!token || token.trim() === "") {
+      console.log("Empty token found");
+      return null;
+    }
+
+    const user = verifyToken(token);
+
+    if (!user) {
+      console.log("Token verification failed");
+      return null;
+    }
+
+    return user;
+  } catch (error) {
+    console.error("Auth middleware error:", error);
     return null;
   }
-
-  return verifyToken(token);
 }
 
 export function requireAuth(

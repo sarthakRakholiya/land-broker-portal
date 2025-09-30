@@ -9,7 +9,14 @@ export async function GET(
   try {
     const user = getAuthUser(request);
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      console.log("Unauthorized access attempt to land details");
+      return NextResponse.json(
+        {
+          error: "Unauthorized",
+          message: "Authentication required. Please login again.",
+        },
+        { status: 401 }
+      );
     }
 
     const { id } = await params;
@@ -50,7 +57,14 @@ export async function PUT(
   try {
     const user = getAuthUser(request);
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      console.log("Unauthorized access attempt to land details");
+      return NextResponse.json(
+        {
+          error: "Unauthorized",
+          message: "Authentication required. Please login again.",
+        },
+        { status: 401 }
+      );
     }
 
     const { id } = await params;
@@ -134,7 +148,14 @@ export async function DELETE(
   try {
     const user = getAuthUser(request);
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      console.log("Unauthorized access attempt to land details");
+      return NextResponse.json(
+        {
+          error: "Unauthorized",
+          message: "Authentication required. Please login again.",
+        },
+        { status: 401 }
+      );
     }
 
     const { id } = await params;
