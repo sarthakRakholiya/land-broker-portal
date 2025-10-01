@@ -17,8 +17,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Ensure Prisma is connected
-    await prisma.$connect();
+    // Test database connection first
+    try {
+      await prisma.$connect();
+      console.log("Database connection successful");
+    } catch (dbError) {
+      console.error("Database connection failed:", dbError);
+      return NextResponse.json(
+        { error: "Database connection failed. Please try again later." },
+        { status: 503 }
+      );
+    }
 
     // Find user by email
     const user = await prisma.user.findUnique({

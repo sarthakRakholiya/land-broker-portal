@@ -66,6 +66,8 @@ export default function RootLayout({
             </AuthProvider>
           </LanguageProvider>
         </ThemeProvider>
+        {/* Temporary script to unregister service workers */}
+        <script src="/unregister-sw.js" async></script>
       </body>
     </html>
   );
