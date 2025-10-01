@@ -23,19 +23,25 @@ export async function POST(request: NextRequest) {
       console.log("Database connection successful");
     } catch (dbError) {
       console.error("Database connection failed:", dbError);
-      
+
       // Check if it's a connection URL issue
-      const errorMessage = dbError instanceof Error ? dbError.message : "Unknown error";
-      if (errorMessage.includes("5432") || errorMessage.includes("Can't reach database server")) {
+      const errorMessage =
+        dbError instanceof Error ? dbError.message : "Unknown error";
+      if (
+        errorMessage.includes("5432") ||
+        errorMessage.includes("Can't reach database server")
+      ) {
         return NextResponse.json(
-          { 
-            error: "Database configuration error. Please check DATABASE_URL uses connection pooling (port 6543, not 5432).",
-            details: "Use Supabase Connection Pooling URL, not Direct Connection URL"
+          {
+            error:
+              "Database configuration error. Please check DATABASE_URL uses connection pooling (port 6543, not 5432).",
+            details:
+              "Use Supabase Connection Pooling URL, not Direct Connection URL",
           },
           { status: 503 }
         );
       }
-      
+
       return NextResponse.json(
         { error: "Database connection failed. Please try again later." },
         { status: 503 }
