@@ -4,8 +4,22 @@ import { prisma } from "@/lib/prisma";
 // GET /api/locations - Get all locations
 export async function GET(request: NextRequest) {
   try {
-    // Ensure Prisma is connected
-    await prisma.$connect();
+    console.log("=== Location API Debug ===");
+    console.log("DATABASE_URL configured:", !!process.env.DATABASE_URL);
+    console.log("NODE_ENV:", process.env.NODE_ENV);
+
+    // Test database connection first
+    try {
+      await prisma.$connect();
+      console.log("Database connection successful");
+    } catch (dbError) {
+      console.error("Database connection failed:", dbError);
+      throw new Error(
+        `Database connection failed: ${
+          dbError instanceof Error ? dbError.message : "Unknown error"
+        }`
+      );
+    }
 
     const { searchParams } = new URL(request.url);
     const search = searchParams.get("search");

@@ -12,6 +12,11 @@ export const prisma =
         ? ["query", "error", "warn"]
         : ["error"],
     errorFormat: "pretty",
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL,
+      },
+    },
   });
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
