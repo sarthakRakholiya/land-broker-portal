@@ -13,6 +13,22 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  // Disable service worker warnings and PWA prompts
+  experimental: {
+    serverComponentsExternalPackages: [],
+  },
+  // Clean up console warnings
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      };
+    }
+    return config;
+  },
 };
 
 export default withNextIntl(nextConfig);
