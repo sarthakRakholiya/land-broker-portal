@@ -33,32 +33,14 @@ class AuthService {
 
       const data: AuthResponse = await response.json();
 
-      console.log("=== Auth Service Login Success ===");
-      console.log(
-        "Received token:",
-        data.token ? "Token received" : "No token in response"
-      );
-      console.log("Received user:", data.user);
-
       // Store token in localStorage
       if (typeof window !== "undefined") {
         localStorage.setItem("auth_token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
-
-        // Verify storage immediately
-        const storedToken = localStorage.getItem("auth_token");
-        const storedUser = localStorage.getItem("user");
-        console.log("Token stored successfully:", !!storedToken);
-        console.log("User stored successfully:", !!storedUser);
-        console.log(
-          "Stored token preview:",
-          storedToken?.substring(0, 50) + "..."
-        );
       }
 
       return data;
     } catch (error) {
-      console.error("Login failed:", error);
       throw error;
     }
   }
@@ -85,21 +67,10 @@ class AuthService {
 
   getToken(): string | null {
     if (typeof window === "undefined") {
-      console.log("getToken: Server side, returning null");
       return null;
     }
 
-    const token = localStorage.getItem("auth_token");
-    console.log(
-      "getToken: Retrieved from localStorage:",
-      token ? "Token exists" : "No token found"
-    );
-
-    if (token) {
-      console.log("Token preview:", token.substring(0, 50) + "...");
-    }
-
-    return token;
+    return localStorage.getItem("auth_token");
   }
 
   isAuthenticated(): boolean {

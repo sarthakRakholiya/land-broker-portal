@@ -23,7 +23,7 @@ import {
   Search as SearchIcon,
   Add as AddIcon,
 } from "@mui/icons-material";
-import { LAND_TYPES } from "@/constants/lands";
+// Remove LAND_TYPES import as we'll use localized types
 import { useLanguage } from "@/contexts/LanguageContext";
 import { locationsService } from "@/services/locations";
 import { useState, useEffect } from "react";
@@ -56,6 +56,16 @@ export function LandsFilters({
   const [allLocations, setAllLocations] = useState<string[]>([]);
   const [loadingLocations, setLoadingLocations] = useState(false);
 
+  // Create localized land type options
+  const localizedLandTypes = [
+    { value: "land", label: t("landTypes.land") },
+    { value: "house", label: t("landTypes.house") },
+    { value: "apartment", label: t("landTypes.apartment") },
+    { value: "commercial", label: t("landTypes.commercial") },
+    { value: "industrial", label: t("landTypes.industrial") },
+    { value: "agricultural", label: t("landTypes.agricultural") },
+  ];
+
   const activeFiltersCount = [locationFilter, typeFilter].filter(
     Boolean
   ).length;
@@ -69,8 +79,8 @@ export function LandsFilters({
         const locations = await locationsService.getLocations();
         const locationNames = locations.map((location) => location.name);
         setAllLocations(locationNames.sort());
-      } catch (error) {
-        console.error("Failed to fetch locations:", error);
+      } catch {
+        // Handle fetch error silently
       } finally {
         setLoadingLocations(false);
       }
@@ -205,7 +215,7 @@ export function LandsFilters({
                 size="small"
               >
                 <MenuItem value="">{t("land.allTypes")}</MenuItem>
-                {LAND_TYPES.map((type) => (
+                {localizedLandTypes.map((type) => (
                   <MenuItem key={type.value} value={type.value}>
                     {type.label}
                   </MenuItem>
@@ -255,7 +265,8 @@ export function LandsFilters({
               {typeFilter && (
                 <Chip
                   label={`Type: ${
-                    LAND_TYPES.find((t) => t.value === typeFilter)?.label
+                    localizedLandTypes.find((t) => t.value === typeFilter)
+                      ?.label
                   }`}
                   onDelete={() => onTypeFilterChange("")}
                   size="small"

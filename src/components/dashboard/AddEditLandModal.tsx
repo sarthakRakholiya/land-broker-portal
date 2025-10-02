@@ -27,10 +27,11 @@ import {
 import { useForm, Controller, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { LandRecord, LAND_TYPES, LAND_AREA_UNITS } from "@/constants/lands";
+import { LandRecord } from "@/constants/lands";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { toast } from "@/utils/toast";
-import { locationsService, Location } from "@/services/locations";
+import { useLocations } from "./LocationProvider";
+import { Location } from "@/lib/data";
 
 const landSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
@@ -95,8 +96,12 @@ export function AddEditLandModal({
   const { t } = useLanguage();
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [locations, setLocations] = useState<Location[]>([]);
-  const [loadingLocations, setLoadingLocations] = useState(false);
+  const {
+    locations,
+    loading: loadingLocations,
+    searchLocations,
+    createLocation,
+  } = useLocations();
   const [locationInput, setLocationInput] = useState("");
   const [, setTypeInput] = useState("");
   const [customLandTypes, setCustomLandTypes] = useState<
@@ -104,7 +109,18 @@ export function AddEditLandModal({
   >([]);
 
   const isEdit = Boolean(land);
-  const allLandTypes = [...LAND_TYPES, ...customLandTypes];
+
+  // Create localized land type options
+  const localizedLandTypes = [
+    { value: "land", label: t("landTypes.land") },
+    { value: "house", label: t("landTypes.house") },
+    { value: "apartment", label: t("landTypes.apartment") },
+    { value: "commercial", label: t("landTypes.commercial") },
+    { value: "industrial", label: t("landTypes.industrial") },
+    { value: "agricultural", label: t("landTypes.agricultural") },
+  ];
+
+  const allLandTypes = [...localizedLandTypes, ...customLandTypes];
 
   const {
     control,
@@ -120,7 +136,7 @@ export function AddEditLandModal({
       mobileNo: "",
       locationId: "",
       landArea: 0,
-      landAreaUnit: "sqft",
+      landAreaUnit: "bigha",
       type: "land",
       totalPrice: 0,
     },
@@ -130,12 +146,15 @@ export function AddEditLandModal({
   const totalPrice = useWatch({ control, name: "totalPrice" });
   const landArea = useWatch({ control, name: "landArea" });
 
-  // Fetch locations when modal opens
-  useEffect(() => {
-    if (open) {
-      fetchLocations();
-    }
-  }, [open]);
+  // Create localized area unit options
+  const localizedAreaUnits = [
+    { value: "sqft", label: t("areaUnits.sqft") },
+    { value: "acres", label: t("areaUnits.acres") },
+    { value: "bigha", label: t("areaUnits.bigha") },
+    { value: "hectare", label: t("areaUnits.hectare") },
+  ];
+
+  // Locations are provided by LocationProvider
 
   // Reset form when editing land changes
   useEffect(() => {
@@ -174,34 +193,9 @@ export function AddEditLandModal({
     }
   }, [land, reset]);
 
-  const fetchLocations = async () => {
-    try {
-      setLoadingLocations(true);
-      const fetchedLocations = await locationsService.getLocations();
-      setLocations(fetchedLocations);
-    } catch (error) {
-      console.error("Failed to fetch locations:", error);
-      toast.error("Error", "Failed to fetch locations");
-    } finally {
-      setLoadingLocations(false);
-    }
-  };
-
   const handleLocationChange = async (value: string) => {
     setLocationInput(value);
-
-    if (value.trim()) {
-      try {
-        const searchResults = await locationsService.getLocations({
-          search: value.trim(),
-        });
-        setLocations(searchResults);
-      } catch (error) {
-        console.error("Failed to search locations:", error);
-      }
-    } else {
-      await fetchLocations();
-    }
+    await searchLocations(value);
   };
 
   // Create options with "Create new" option when user types something
@@ -229,15 +223,15 @@ export function AddEditLandModal({
 
     try {
       setIsLoading(true);
-      const newLocation = await locationsService.createLocation({
-        name: locationInput.trim(),
-      });
+      const newLocation = await createLocation(locationInput.trim());
 
-      setLocations((prev) => [newLocation, ...prev]);
+      if (!newLocation) {
+        toast.error("Error", "Failed to create location");
+        return;
+      }
       setValue("locationId", newLocation.id);
       toast.success("Success", "Location created successfully!");
     } catch (error) {
-      console.error("Failed to create location:", error);
       const errorMessage =
         error instanceof Error ? error.message : "Failed to create location";
       toast.error("Error", errorMessage);
@@ -288,8 +282,8 @@ export function AddEditLandModal({
         },
       };
       await onSave(landData);
-    } catch (error) {
-      console.error("Error saving land:", error);
+    } catch {
+      // Handle save error
     } finally {
       setIsSaving(false);
     }
@@ -530,16 +524,16 @@ export function AddEditLandModal({
                 render={({ field }) => (
                   <Autocomplete
                     {...field}
-                    options={LAND_AREA_UNITS}
+                    options={localizedAreaUnits}
                     getOptionLabel={(option) => option.label}
                     value={
-                      LAND_AREA_UNITS.find(
+                      localizedAreaUnits.find(
                         (unit) => unit.value === field.value
-                      ) || LAND_AREA_UNITS[0]
+                      ) || localizedAreaUnits[0]
                     }
                     onChange={(_, newValue) => {
                       field.onChange(
-                        newValue?.value || LAND_AREA_UNITS[0].value
+                        newValue?.value || localizedAreaUnits[0].value
                       );
                     }}
                     renderInput={(params) => (

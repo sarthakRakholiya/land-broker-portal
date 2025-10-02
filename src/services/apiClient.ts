@@ -13,22 +13,11 @@ class ApiClient {
 
   private getAuthHeaders() {
     const token = authService.getToken();
-    console.log(
-      "API Client - Token retrieved:",
-      token ? "Token exists" : "No token"
-    );
 
-    const headers = {
+    return {
       "Content-Type": "application/json",
       ...(token && { Authorization: `Bearer ${token}` }),
     };
-
-    console.log("API Client - Headers:", {
-      hasAuth: !!headers.Authorization,
-      contentType: headers["Content-Type"],
-    });
-
-    return headers;
   }
 
   private async handleResponse<T>(response: Response): Promise<T> {

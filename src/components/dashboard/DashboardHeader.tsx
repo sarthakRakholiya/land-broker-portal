@@ -38,7 +38,6 @@ export function DashboardHeader({}: DashboardHeaderProps) {
       await logout();
       toast.success("Success", t("auth.logoutSuccess"));
     } catch (error) {
-      console.error("Logout failed:", error);
       const errorMessage =
         error instanceof Error ? error.message : "Logout failed";
       toast.error("Error", errorMessage);

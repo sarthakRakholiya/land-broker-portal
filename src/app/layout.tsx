@@ -23,7 +23,6 @@ export const metadata: Metadata = {
     "Professional land broker services and property management platform",
   keywords: "land broker, property management, real estate, DB Vekariya",
   authors: [{ name: "DB Vekariya" }],
-  viewport: "width=device-width, initial-scale=1",
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
@@ -45,6 +44,11 @@ export const metadata: Metadata = {
       },
     ],
   },
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({

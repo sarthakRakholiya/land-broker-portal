@@ -6,7 +6,6 @@ export async function GET(request: NextRequest) {
   try {
     const user = getAuthUser(request);
     if (!user) {
-      console.log("Unauthorized access attempt to lands API");
       return NextResponse.json(
         {
           error: "Unauthorized",
@@ -15,8 +14,6 @@ export async function GET(request: NextRequest) {
         { status: 401 }
       );
     }
-
-    console.log("Authenticated user:", user.userId, user.email);
 
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get("page") || "0");
@@ -84,7 +81,6 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Get lands error:", error);
     const errorMessage =
       error instanceof Error ? error.message : "Failed to fetch lands";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
@@ -95,7 +91,6 @@ export async function POST(request: NextRequest) {
   try {
     const user = getAuthUser(request);
     if (!user) {
-      console.log("Unauthorized access attempt to create land");
       return NextResponse.json(
         {
           error: "Unauthorized",
@@ -159,7 +154,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(land, { status: 201 });
   } catch (error) {
-    console.error("Create land error:", error);
     const errorMessage =
       error instanceof Error ? error.message : "Failed to create land record";
     return NextResponse.json({ error: errorMessage }, { status: 500 });

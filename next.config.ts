@@ -13,10 +13,8 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  // Disable service worker warnings and PWA prompts
-  experimental: {
-    serverComponentsExternalPackages: [],
-  },
+  // External packages for server components
+  serverExternalPackages: [],
   // Clean up console warnings
   webpack: (config, { isServer }) => {
     if (!isServer) {

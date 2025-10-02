@@ -6,32 +6,27 @@ export function getAuthUser(request: NextRequest) {
     const authHeader = request.headers.get("authorization");
 
     if (!authHeader) {
-      console.log("No authorization header found");
       return null;
     }
 
     if (!authHeader.startsWith("Bearer ")) {
-      console.log("Invalid authorization header format");
       return null;
     }
 
     const token = authHeader.replace("Bearer ", "");
 
     if (!token || token.trim() === "") {
-      console.log("Empty token found");
       return null;
     }
 
     const user = verifyToken(token);
 
     if (!user) {
-      console.log("Token verification failed");
       return null;
     }
 
     return user;
-  } catch (error) {
-    console.error("Auth middleware error:", error);
+  } catch {
     return null;
   }
 }

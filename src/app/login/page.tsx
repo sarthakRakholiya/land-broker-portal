@@ -42,7 +42,6 @@ export default function LoginPage() {
       await login({ email, password });
       router.push("/dashboard");
     } catch (error) {
-      console.error("Login failed:", error);
       const errorMessage =
         error instanceof Error ? error.message : t("auth.loginError");
       setError(errorMessage);

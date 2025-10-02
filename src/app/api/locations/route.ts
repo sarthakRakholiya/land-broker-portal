@@ -4,16 +4,10 @@ import { prisma } from "@/lib/prisma";
 // GET /api/locations - Get all locations
 export async function GET(request: NextRequest) {
   try {
-    console.log("=== Location API Debug ===");
-    console.log("DATABASE_URL configured:", !!process.env.DATABASE_URL);
-    console.log("NODE_ENV:", process.env.NODE_ENV);
-
     // Test database connection first
     try {
       await prisma.$connect();
-      console.log("Database connection successful");
     } catch (dbError) {
-      console.error("Database connection failed:", dbError);
       throw new Error(
         `Database connection failed: ${
           dbError instanceof Error ? dbError.message : "Unknown error"
@@ -41,14 +35,6 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(locations);
   } catch (error) {
-    console.error("Get locations error:", error);
-
-    // More detailed error logging for production debugging
-    if (error instanceof Error) {
-      console.error("Error stack:", error.stack);
-      console.error("Error name:", error.name);
-    }
-
     // Check if it's a database connection error
     const errorMessage =
       error instanceof Error ? error.message : "Failed to fetch locations";
@@ -97,8 +83,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(location, { status: 201 });
   } catch (error) {
-    console.error("Create location error:", error);
-
     // Handle unique constraint violation
     if (error instanceof Error && error.message.includes("Unique constraint")) {
       return NextResponse.json(

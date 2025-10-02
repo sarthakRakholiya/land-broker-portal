@@ -3,12 +3,6 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET() {
   try {
-    console.log("=== Health Check Debug ===");
-    console.log("NODE_ENV:", process.env.NODE_ENV);
-    console.log("DATABASE_URL configured:", !!process.env.DATABASE_URL);
-    console.log("NEXTAUTH_SECRET configured:", !!process.env.NEXTAUTH_SECRET);
-    console.log("JWT_SECRET configured:", !!process.env.JWT_SECRET);
-
     // Check environment variables
     const hasDbUrl = !!process.env.DATABASE_URL;
     const hasJwtSecret = !!(
@@ -22,19 +16,12 @@ export async function GET() {
       throw new Error("DATABASE_URL environment variable is not set");
     }
 
-    if (!hasJwtSecret) {
-      console.warn("JWT secret not configured, using default");
-    }
-
     // Check database connection
-    console.log("Testing database connection...");
     await prisma.$connect();
     await prisma.$queryRaw`SELECT 1`;
-    console.log("Database connection successful");
 
     // Test a simple query
     const locationCount = await prisma.location.count();
-    console.log("Location count:", locationCount);
 
     return NextResponse.json({
       status: "healthy",
@@ -50,8 +37,6 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error("Health check failed:", error);
-
     const errorDetails = {
       message: error instanceof Error ? error.message : "Unknown error",
       stack: error instanceof Error ? error.stack : undefined,

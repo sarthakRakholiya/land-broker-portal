@@ -194,9 +194,11 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     // Load language from localStorage on mount (client-side only)
     if (typeof window !== "undefined") {
       const savedLanguage = localStorage.getItem("language") as Language;
-      if (savedLanguage && (savedLanguage === "en" || savedLanguage === "gu")) {
-        setLanguageState(savedLanguage);
+      // Only set to English if explicitly saved as English, otherwise default to Gujarati
+      if (savedLanguage === "en") {
+        setLanguageState("en");
       }
+      // Default to Gujarati for any other case (including null, "gu", or invalid values)
     }
   }, []);
 

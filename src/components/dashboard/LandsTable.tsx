@@ -26,7 +26,7 @@ import {
   Phone as PhoneIcon,
   LocationOn as LocationIcon,
 } from "@mui/icons-material";
-import { LandRecord, LAND_TYPES } from "@/constants/lands";
+import { LandRecord } from "@/constants/lands";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface LandsTableProps {
@@ -63,11 +63,22 @@ export function LandsTable({
   };
 
   const getLandTypeLabel = (type: string) => {
-    return LAND_TYPES.find((t) => t.value === type)?.label || type;
+    const normalizedType = type.toLowerCase();
+    const key = `landTypes.${normalizedType}`;
+    const translation = t(key);
+    return translation !== key ? translation : type;
+  };
+
+  const getAreaUnitLabel = (unit: string) => {
+    const normalizedUnit = unit.toLowerCase();
+    const key = `areaUnits.${normalizedUnit}`;
+    const translation = t(key);
+    return translation !== key ? translation : unit;
   };
 
   const formatArea = (area: number, unit: string) => {
-    return `${area.toLocaleString()} ${unit}`;
+    const localizedUnit = getAreaUnitLabel(unit);
+    return `${area.toLocaleString()} ${localizedUnit}`;
   };
 
   if (isMobile) {

@@ -4,8 +4,6 @@ import bcrypt from "bcryptjs";
 
 export async function POST(request: NextRequest) {
   try {
-    console.log("=== Database Seeding ===");
-
     // Check if we're in production and require a secret key
     const { secret } = await request.json();
 
@@ -18,7 +16,6 @@ export async function POST(request: NextRequest) {
 
     // Test database connection
     await prisma.$connect();
-    console.log("Database connected successfully");
 
     // Create admin user
     const hashedPassword = await bcrypt.hash("admin123", 12);
@@ -34,8 +31,6 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    console.log("Admin user created/updated:", adminUser.email);
-
     // Create default locations
     const locations = ["Gondal", "Rajkot"];
     const createdLocations = [];
@@ -48,8 +43,6 @@ export async function POST(request: NextRequest) {
       });
       createdLocations.push(location);
     }
-
-    console.log("Locations created:", createdLocations.length);
 
     return NextResponse.json({
       success: true,
@@ -65,8 +58,6 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Seeding error:", error);
-
     return NextResponse.json(
       {
         error: "Seeding failed",

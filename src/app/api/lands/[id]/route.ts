@@ -9,7 +9,6 @@ export async function GET(
   try {
     const user = getAuthUser(request);
     if (!user) {
-      console.log("Unauthorized access attempt to land details");
       return NextResponse.json(
         {
           error: "Unauthorized",
@@ -43,7 +42,6 @@ export async function GET(
 
     return NextResponse.json(land);
   } catch (error) {
-    console.error("Get land error:", error);
     const errorMessage =
       error instanceof Error ? error.message : "Failed to fetch land record";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
@@ -57,7 +55,6 @@ export async function PUT(
   try {
     const user = getAuthUser(request);
     if (!user) {
-      console.log("Unauthorized access attempt to land details");
       return NextResponse.json(
         {
           error: "Unauthorized",
@@ -134,7 +131,6 @@ export async function PUT(
 
     return NextResponse.json(land);
   } catch (error) {
-    console.error("Update land error:", error);
     const errorMessage =
       error instanceof Error ? error.message : "Failed to update land record";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
@@ -148,7 +144,6 @@ export async function DELETE(
   try {
     const user = getAuthUser(request);
     if (!user) {
-      console.log("Unauthorized access attempt to land details");
       return NextResponse.json(
         {
           error: "Unauthorized",
@@ -178,7 +173,6 @@ export async function DELETE(
 
     return NextResponse.json({ message: "Land deleted successfully" });
   } catch (error) {
-    console.error("Delete land error:", error);
     const errorMessage =
       error instanceof Error ? error.message : "Failed to delete land record";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
